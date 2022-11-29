@@ -15,7 +15,16 @@ import pathlib
 from aiogram import types
 from telebot import types
 bot = telebot.TeleBot('5535707405:AAF0s7ZjQa5QY3PqIZWiiDhzPcH0hNyNtpc');
-
+print('hello')
+def gcd(a,b):
+    pass
+def normal(message):
+    connect = sqlite3.connect('user.db')
+    cursor = connect.cursor()
+    mess = message.chat.id
+    calculator = "0"
+    cursor.execute(f"UPDATE login_id SET calculator =? WHERE id = ?", (calculator,mess)) 
+    connect.commit()
 @bot.message_handler(commands=['ds'])
 def start_message(message):
    connect = sqlite3.connect('user.db')
@@ -35,7 +44,7 @@ def start_message(message):
    connect = sqlite3.connect('user.db')
    cursor = connect.cursor()
    cursor.execute(""" CREATE TABLE IF NOT EXISTS login_id(
-      login_number PRIMARY KEY AUTOINCREMENT , id INTEGER,name TEXT,surname TEXT,username TEXT, calculator TEXT 
+      login_number PRIMARY KEY AUTOINCREMENT , id INTEGER,name TEXT,surname TEXT,username TEXT, calculator TEXT
   )""")
    connect.commit()
    people_id = message.chat.id
@@ -78,7 +87,8 @@ def start_message(message):
     b = 0
     c = 2
     d = 4
-    cursor.execute('INSERT INTO login_id (a) VALUES(?)',(a))
+    iduser = message.chat.id
+    cursor.execute(f"UPDATE login_id SET a=? WHERE id = ?", (a,iduser)) 
     connect.commit()
 
 
@@ -94,7 +104,7 @@ def func(message):
     connect = sqlite3.connect('user.db')
     cursor = connect.cursor()
     cursor.execute(""" CREATE TABLE IF NOT EXISTS login_id(
-    login_number PRIMARY KEY AUTOINCREMENT , id INTEGER,name TEXT,surname TEXT,username TEXT, calculator TEXT
+    login_number PRIMARY KEY AUTOINCREMENT , id INTEGER,name TEXT,surname TEXT,username TEXT, calculator TEXT, a TEXT, b TEXT, c TEXT
   )""")
     connect.commit()
     mess = message.chat.id
@@ -117,7 +127,9 @@ def func(message):
         back = types.KeyboardButton("Вернуться в главное меню")
         markup.add(btn1, back)
         bot.send_message(message.chat.id, text="2", reply_markup=markup)
-    elif(message.text == "Ввод переменных"):
+    elif(message.text == "214124215654654"):
+        pass
+    elif(message.text == "приветкнопки"):
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         bt0 = types.KeyboardButton("0")
         bt1 = types.KeyboardButton("1")
@@ -134,9 +146,31 @@ def func(message):
         btv = types.KeyboardButton("Ввод")
         markup.add(bt0,bt1,bt2,bt3,bt4,bt5,bt6,bt7,bt8,bt9,btm,btp,btv)
         bot.send_message(message.chat.id, text="И", reply_markup=markup)
-    elif message.text == "Ввод":
+    elif message.text == "Ввод переменных":
+        mess = message.chat.id
+        calculator = "u2"
+        cursor.execute(f"UPDATE login_id SET calculator =? WHERE id = ?", (calculator,mess)) 
+        connect.commit()
+        bot.send_message(message.chat.id,"Напишите в таком формате уравнение ( +-ax^2+-bx-+c)")
+        bot.send_message(message.chat.id,"Водите отдельно каждое значение перед иксом")
+        a = 'x'
+        mess = message.chat.id
+        cursor.execute(f"UPDATE login_id SET a =? WHERE id = ?", (a,mess)) 
+        connect.commit()
+        b = 'x'
+        cursor.execute(f"UPDATE login_id SET b =? WHERE id = ?", (b,mess)) 
+        connect.commit()
+        c = 'x'
+        cursor.execute(f"UPDATE login_id SET c =? WHERE id = ?", (c,mess)) 
+        connect.commit()
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        back = types.KeyboardButton("Вернуться в главное меню")
+        markup.add(back)
+        bot.send_message(message.chat.id, text="Пишите", reply_markup=markup)
+    elif (message.text == "Квадратные уравнения"):
         pass
     elif (message.text == "Вернуться в главное меню"):
+        normal(message)
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         button1 = types.KeyboardButton("квадратные уравнения вариант 1")
         button2 = types.KeyboardButton("квадратные уравнения вариант 2")
@@ -237,7 +271,70 @@ def func(message):
             calculator = "0"
             cursor.execute(f"UPDATE login_id SET calculator =? WHERE id = ?", (calculator,mess)) 
             connect.commit()
+    elif (m[0] == "u2"):
+        mess = message.chat.id
+        a = cursor.execute(f"SELECT a  FROM login_id WHERE id = {mess}").fetchone()
+        b = cursor.execute(f"SELECT b  FROM login_id WHERE id = {mess}").fetchone()
+        c = cursor.execute(f"SELECT c  FROM login_id WHERE id = {mess}").fetchone()
+        print(c)
+        if a == '...':
+            pass
+        elif a[0] == 'x' :
+             a = message.text
+             mess = message.chat.id
+             cursor.execute(f"UPDATE login_id SET a =? WHERE id = ?", (a,mess)) 
+             connect.commit()
+        elif b[0] == 'x' :
+             b = message.text
+             mess = message.chat.id
+             cursor.execute(f"UPDATE login_id SET b =? WHERE id = ?", (b,mess)) 
+             connect.commit()
+        elif c[0] == 'x' :
+             c = message.text
+             mess = message.chat.id
+             cursor.execute(f"UPDATE login_id SET c =? WHERE id = ?", (c,mess)) 
+             connect.commit()
+        if a[0] != 'x' and b[0] != 'x' and  c[0] != 'x':
+             a = int(a[0])
+             b = int(b[0])
+             c = int(c)
+             D = (b*b)-4*a*c
+             if D==0:
+              x = (-b)/(2*a)
+              bot.send_message(message.from_user.id,"один корень уравнения")
+              bot.send_message(message.from_user.id,x)
+              bot.send_message(message.from_user.id,"Дискприменат равен")
+              bot.send_message(message.from_user.id,D)
+              bot.send_message(message.from_user.id,"если не понимайете напишите /help")
+              mess = message.chat.id
+              calculator = "0"
+              cursor.execute(f"UPDATE login_id SET calculator =? WHERE id = ?", (calculator,mess)) 
+              connect.commit()
+             else:
+              if D<0:
+                bot.send_message(message.from_user.id,"Кореней нет,если не понимайете напишите /help")
+                bot.send_message(message.from_user.id, "пишите на англиской клавиатуре ")
+                mess = message.chat.id
+                calculator = "0"
+                cursor.execute(f"UPDATE login_id SET calculator =? WHERE id = ?", (calculator,mess)) 
+                connect.commit()
 
+              if D>0:
+                x1 =  (-b + math.sqrt(D))/(2*a)
+                x2 =  (-b - math.sqrt(D))/(2*a)
+                bot.send_message(message.from_user.id,"Первый корень")
+                bot.send_message(message.from_user.id,x1)
+                bot.send_message(message.from_user.id,"Второй корень")
+                bot.send_message(message.from_user.id,x2)
+                bot.send_message(message.from_user.id,"Дискприменат равен")
+                bot.send_message(message.from_user.id,D)
+                bot.send_message(message.from_user.id,"если не понимайете напишите /help")
+                mess = message.chat.id
+                calculator = "0"
+                cursor.execute(f"UPDATE login_id SET calculator =? WHERE id = ?", (calculator,mess)) 
+                connect.commit()
+    elif (m[0] == "gcd"):
+        pass
     else:
         bot.send_message(message.chat.id,"Проверьте написанние  ")
 
